@@ -74,52 +74,52 @@ pio device list
 ```
 esp32_servo_project/
 ├── src/
-│   └── main.cpp          # Основний код тут!
-├── lib/                  # Бібліотеки (якщо потрібні)
-├── include/              # Header файли
-└── platformio.ini        # Конфігурація проекту
+│   ├── servo_control.cpp  # ЖЖЖ система - повне API керування серво
+│   └── blink.cpp          # Простий тест - блимання LED
+├── lib/                   # Бібліотеки (якщо потрібні)
+├── include/               # Header файли
+└── platformio.ini         # Конфігурація з environments
 ```
 
-### 3. Написати код
-
-Відкрити `src/main.cpp` і писати:
-
-```cpp
-#include <Arduino.h>
-
-void setup() {
-  Serial.begin(115200);
-  Serial.println("Hello ESP32!");
-}
-
-void loop() {
-  Serial.println("Running...");
-  delay(1000);
-}
-```
-
-### 4. Компіляція і прошивка
+### 3. Вибір скетча для завантаження
 
 **В Terminal IntelliJ:**
 
 ```bash
-# Компіляція (перевірка коду)
-pio run
+# Завантажити ЖЖЖ систему (servo control)
+pio run -e servo_control --target upload
 
-# Прошивка в контролер (підключити USB!)
-pio run --target upload
+# Завантажити blink тест
+pio run -e blink --target upload
 
-# Serial Monitor (дивитися вивід)
+# Serial Monitor (для будь-якого скетча)
 pio device monitor
-
-# Вийти з monitor: Ctrl+C
 ```
+
+### 4. Додати новий скетч
+
+1. Створити файл `src/my_sketch.cpp`
+2. Додати environment в `platformio.ini`:
+   ```ini
+   [env:my_sketch]
+   platform = espressif32
+   board = esp32dev
+   framework = arduino
+   build_src_filter = +<my_sketch.cpp>
+   ```
+3. Завантажити: `pio run -e my_sketch --target upload`
 
 ### 5. Корисні команди
 
 ```bash
+# Показати всі environments
+pio project config
+
+# Компіляція без завантаження
+pio run -e servo_control
+
 # Очистити build
-pio run --target clean
+pio run -e servo_control --target clean
 
 # Показати підключені пристрої
 pio device list
@@ -128,7 +128,7 @@ pio device list
 pio lib update
 
 # Встановити бібліотеку (наприклад, Servo)
-pio lib install "Servo"
+pio lib install "ESP32Servo"
 ```
 
 ## 🔧 Налаштування platformio.ini
