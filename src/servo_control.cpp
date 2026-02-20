@@ -10,8 +10,7 @@
 #include <ESP32Servo.h>
 
 // ===== НАЛАШТУВАННЯ WiFi =====
-const char* ssid = "vadymko@home";
-const char* password = "sOSSDnpvva";
+#include "wifi_credentials.h"
 
 // Веб-сервер на порту 80
 WebServer server(80);
@@ -354,8 +353,8 @@ void setup() {
   
   // WiFi
   Serial.print("Підключення до WiFi: ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
+  Serial.println(WIFI_SSID);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < 40) {
